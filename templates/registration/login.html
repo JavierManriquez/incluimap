@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <img src="{% static 'img/Icon.png' %}" alt="IncluiMap" class="auth-logo" width="88" height="88"
+           onerror="this.style.display='none'">
+      <h1 class="auth-title">Entrar</h1>
+      <p class="auth-subtitle">Accede para reportar y mejorar la accesibilidad en Maipú.</p>
+    </div>
+
+    <form method="post" class="auth-form" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert error">{{ form.non_field_errors|join:", " }}</div>
+      {% endif %}
+
+      <div class="field">
+        <label for="{{ form.username.id_for_label }}">Usuario</label>
+        <div class="input-wrap">
+          <span class="icon" aria-hidden="true">👤</span>
+          <input class="input" type="text" name="username" id="{{ form.username.id_for_label }}" autocomplete="username" required autofocus>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="{{ form.password.id_for_label }}">Contraseña</label>
+        <div class="input-wrap">
+          <span class="icon" aria-hidden="true">🔒</span>
+          <input class="input" type="password" name="password" id="{{ form.password.id_for_label }}" autocomplete="current-password" required>
+          <button class="peek" type="button" aria-label="Mostrar/ocultar contraseña">👁️</button>
+        </div>
+      </div>
+
+      <div class="row-between">
+        <label class="chk"><input type="checkbox" name="remember" value="1"> Recuérdame</label>
+        <a class="link subtle" href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button class="btn btn-primary btn-wide" type="submit">Entrar</button>
+
+      <div class="auth-foot">
+        <span class="subtle">¿Aún no tienes cuenta?</span>
+        <a class="link" href="{% url 'signup' %}">Crear cuenta</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.querySelector('.peek');
+    const pwd = document.getElementById('{{ form.password.id_for_label }}');
+    if (btn && pwd) {
+      btn.addEventListener('click', () => {
+        pwd.type = (pwd.type === 'password') ? 'text' : 'password';
+      });
+    }
+  });
+</script>
+
+{% endblock %}

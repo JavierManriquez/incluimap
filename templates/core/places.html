@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/places.css' %}">
+<link rel="stylesheet" href="{% static 'css/favorites.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="places-layout">
+  <div class="places-header">
+    <div class="page-head">
+      <div>
+        <div class="h1">Lugares</div>
+        <div class="subtle">Últimos registrados en la comunidad</div>
+      </div>
+    </div>
+
+    {% if places %}
+      <div class="places-meta-pill">
+        <span class="places-meta-pill-dot"></span>
+        <span>{{ places|length }} lugares accesibles registrados</span>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if places %}
+    <div class="places-toolbar">
+      <div class="subtle">Explora y filtra los puntos de interés inclusivos.</div>
+      <div class="places-search">
+        <span class="places-search-icon">🔎</span>
+        <input type="search"
+               placeholder="Buscar por nombre, calle o etiqueta…"
+               oninput="filterPlaces(this.value)">
+      </div>
+    </div>
+
+    <div class="card pad">
+      <ul class="places-card-list" id="places-list">
+        {% for p in places %}
+          <li class="place-card"
+              data-search="{{ p.name }} {{ p.address }} {% if p.tags %}{{ p.tags }}{% endif %}">
+            <div class="place-avatar">{{ p.name|first }}</div>
+
+            <div class="place-body">
+              <div class="place-title-row">
+                <div class="place-name">{{ p.name }}</div>
+                {% if forloop.first %}
+                  <span class="place-badge-new">Nuevo</span>
+                {% endif %}
+              </div>
+
+              <div class="place-address">{{ p.address }}</div>
+
+              {% if p.tags %}
+                <div class="place-tags">
+                  <span class="place-tag-chip">{{ p.tags }}</span>
+                </div>
+              {% endif %}
+
+              <div class="place-foot">
+                Punto registrado por la comunidad para mejorar la accesibilidad urbana.
+              </div>
+
+              {% if user.is_authenticated %}
+                <form method="post" action="{% url 'toggle_favorite_place' p.id %}" class="fav-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                  <button type="submit" class="fav-btn {% if p.id in favorite_ids %}active{% endif %}">
+                    <span class="fav-icon">{% if p.id in favorite_ids %}★{% else %}☆{% endif %}</span>
+                    <span class="fav-label">
+                      {% if p.id in favorite_ids %}Favorito{% else %}Guardar{% endif %}
+                    </span>
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div id="places-no-results" class="places-no-results">
+        No se encontraron lugares con ese criterio de búsqueda.
+      </div>
+    </div>
+  {% else %}
+    <div class="card pad places-empty">
+      <span>🚧 Aún no hay lugares registrados. Sé el primero en reportar un punto accesible.</span>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+function filterPlaces(term) {
+  term = term.toLowerCase();
+  const cards = document.querySelectorAll('.place-card');
+  let anyVisible = false;
+
+  cards.forEach(card => {
+    const text = card.dataset.search.toLowerCase();
+    const show = text.includes(term);
+    card.style.display = show ? "" : "none";
+    if (show) anyVisible = true;
+  });
+
+  const msg = document.getElementById('places-no-results');
+  if (msg) msg.style.display = anyVisible ? "none" : "block";
+}
+</script>
+{% endblock %}
+
+
+
+

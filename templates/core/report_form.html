@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/reportar.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="report-header">
+  <h1 class="report-title">
+    {% if is_edit %}Editar reporte{% else %}Reportar accesibilidad{% endif %}
+  </h1>
+ 
+
+  <div class="report-badges">
+    <span class="badge">⭐ 1–5 estrellas</span>
+    <span class="badge">🏷️ Etiquetas</span>
+    <span class="badge">📷 Foto opcional</span>
+    {% if is_edit %}
+      <span class="badge badge-edit">✏️ Modo edición</span>
+    {% endif %}
+  </div>
+</div>
+
+<div class="report-container">
+
+  
+  <div class="report-form-card">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-error">{{ form.non_field_errors|striptags }}</div>
+      {% endif %}
+
+      
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-icon">📍</div>
+          <div>
+            <h3>1. Lugar del reporte</h3>
+            <p class="section-desc">Selecciona el sitio donde hiciste la observación.</p>
+          </div>
+        </div>
+
+        <label for="{{ form.place.id_for_label }}">Lugar *</label>
+        {{ form.place }}
+        {% if form.place.errors %}
+          <div class="form-error">{{ form.place.errors|striptags }}</div>
+        {% endif %}
+      </div>
+
+      
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-icon">📝</div>
+          <div>
+            <h3>2. Descripción</h3>
+            <p class="section-desc">Explica brevemente qué encontraste.</p>
+          </div>
+        </div>
+
+        <label for="{{ form.description.id_for_label }}">Detalle del reporte</label>
+        {{ form.description }}
+      
+        {% if form.description.errors %}
+          <div class="form-error">{{ form.description.errors|striptags }}</div>
+        {% endif %}
+      </div>
+
+      
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-icon">⭐</div>
+          <div>
+            <h3>3. Evaluación y etiquetas</h3>
+            <p class="section-desc">Indica qué tan accesible es y qué elementos hay.</p>
+          </div>
+        </div>
+
+        <div class="two-columns">
+          <div>
+            <label for="{{ form.rating.id_for_label }}">Evaluación</label>
+            {{ form.rating }}
+            <p class="field-hint">1 = baja accesibilidad • 5 = excelente.</p>
+            {% if form.rating.errors %}
+              <div class="form-error">{{ form.rating.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div>
+            <label>Etiquetas</label>
+            <div class="tags-box">
+              {{ form.tags }}
+            </div>
+            <p class="field-hint">Selecciona las que correspondan.</p>
+
+            {% if form.tags.errors %}
+              <div class="form-error">{{ form.tags.errors|striptags }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. FOTO -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-icon">📷</div>
+          <div>
+            <h3>4. Foto del lugar (opcional)</h3>
+            <p class="section-desc">Una imagen ayuda a otros usuarios.</p>
+          </div>
+        </div>
+
+        <div class="upload-wrapper">
+          <label class="upload-btn" for="{{ form.photo.id_for_label }}">
+            <span class="upload-icon">📤</span>
+            <span>Subir imagen</span>
+          </label>
+          {{ form.photo }}
+        </div>
+
+        <p class="field-hint">Formatos: JPG, PNG, WEBP (máx. 5MB)</p>
+
+        {% if report and report.photo %}
+        <div class="current-photo">
+          <p class="field-hint">Foto actual:</p>
+          <img src="{{ report.photo.url }}" class="current-photo-img" alt="Foto actual del reporte">
+        </div>
+        {% endif %}
+
+        {% if form.photo.errors %}
+          <div class="form-error">{{ form.photo.errors|striptags }}</div>
+        {% endif %}
+      </div>
+
+      
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">
+          {% if is_edit %}Guardar cambios{% else %}Publicar reporte{% endif %}
+        </button>
+
+        <a class="btn-secondary" href="{% url 'my_reports' %}">Cancelar</a>
+      </div>
+    </form>
+  </div>
+
+  
+  <aside class="report-sidebar">
+    <h3>💡 Tips rápidos</h3>
+
+    <ul class="tips-list">
+      <li>📍 Indica referencias cercanas (cruce, local, estación).</li>
+      <li>🚧 Describe rampas, escaleras, desniveles u obstáculos.</li>
+      <li>⚠️ Señala riesgos importantes (caídas, acceso bloqueado).</li>
+      <li>✨ Destaca lugares bien adaptados y accesibles.</li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <span class="sidebar-badge">Comunidad IncluiMap</span>
+      <p>Cada reporte mejora la accesibilidad en Maipú. ¡Gracias por aportar!</p>
+    </div>
+  </aside>
+
+</div>
+
+{% endblock %}
+

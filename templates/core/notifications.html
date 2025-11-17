@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="h1">Notificaciones</div>
+    <div class="subtle">Actualizaciones de tus lugares favoritos.</div>
+  </div>
+</div>
+
+{% if notifications %}
+  <ul class="notif-list">
+    {% for n in notifications %}
+      <li class="notif-item {% if not n.is_read %}notif-unread{% endif %}">
+        <div class="notif-main">
+          <div class="notif-title">
+            {% if n.place %}
+              <span class="notif-pill">Lugar favorito</span>
+              <span class="notif-place">{{ n.place.name }}</span>
+            {% else %}
+              <span class="notif-pill">Notificación</span>
+            {% endif %}
+          </div>
+          <p class="notif-text">{{ n.message|linebreaksbr }}</p>
+        </div>
+        <div class="notif-meta">
+          <time datetime="{{ n.created_at|date:'c' }}">
+            {{ n.created_at|date:"d/m/Y H:i" }}
+          </time>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <div class="card pad">
+    <p class="subtle">
+      Aún no tienes notificaciones.<br>
+      Marca lugares como favoritos y te avisaremos cuando haya nuevos reportes.
+    </p>
+  </div>
+{% endif %}
+{% endblock %}

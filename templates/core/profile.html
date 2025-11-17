@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<div class="profile-page">
+  <div class="page-head">
+    <div>
+      <div class="h1">Mi perfil</div>
+      <div class="subtle">Revisa tus datos y actualiza tu foto de IncluiMap.</div>
+    </div>
+  </div>
+
+  <div class="profile-layout">
+    
+    <div class="profile-card">
+      <h2 class="h2 mb-2">Tu cuenta</h2>
+      <p class="subtle mb-4">
+        Hola, {{ request.user.first_name|default:request.user.username }} 👋
+      </p>
+
+      <div class="profile-user-row">
+        <div class="avatar-circle">
+          {% if request.user.profile.avatar %}
+            <img src="{{ request.user.profile.avatar.url }}" alt="Foto de perfil">
+          {% else %}
+            {{ request.user.username|first|upper }}
+          {% endif %}
+        </div>
+        <div class="profile-user-meta">
+          <div><span>Usuario</span><strong>{{ request.user.username }}</strong></div>
+          <div><span>Correo</span><strong>{{ request.user.email }}</strong></div>
+          <div><span>Miembro desde</span><strong>{{ request.user.date_joined|date:"d/m/Y" }}</strong></div>
+        </div>
+      </div>
+
+      {% if request.user.profile.bio %}
+        <div class="profile-bio">
+          <span>Bio</span>
+          <p>{{ request.user.profile.bio }}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="card pad profile-form-card">
+      <h2 class="h2 mb-4">Editar perfil</h2>
+
+      <form method="post" enctype="multipart/form-data" class="profile-form">
+        {% csrf_token %}
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <div class="profile-form-grid">
+          <div>
+            <label class="label">Nombre</label>
+            {{ u_form.first_name }}
+          </div>
+          <div>
+            <label class="label">Apellido</label>
+            {{ u_form.last_name }}
+          </div>
+        </div>
+
+        <div>
+          <label class="label">Correo</label>
+          {{ u_form.email }}
+        </div>
+
+        <div>
+          <label class="label">Biografía</label>
+          {{ p_form.bio }}
+        </div>
+
+        <div>
+          <label class="label">Foto de perfil</label>
+          {{ p_form.avatar }}
+          <p class="subtle mt-1 text-xs">
+            Usa una imagen cuadrada (JPG/PNG/WEBP) para que se vea mejor.
+          </p>
+        </div>
+
+        <div class="profile-actions">
+          <button type="submit" class="btn btn-primary">
+            Guardar cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+

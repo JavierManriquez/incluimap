@@ -1,0 +1,64 @@
+# Python
+############
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Entornos Virtuales
+############
+# Archivos de entornos virtuales (comúnmente .venv o venv)
+.venv/
+venv/
+env/
+/bin
+/include
+/lib
+/lib64
+/pyvenv.cfg
+/share
+
+# Instalación de paquetes
+############
+# Pip
+pip-log.txt
+pip-delete-this-directory.txt
+pip_cache/
+
+# Dependencias instaladas
+# Se ignoran para que la instalación se haga con requirements.txt
+/site-packages/
+
+# Django
+############
+# Archivos de migración de la base de datos.
+# Puedes querer mantenerlos, pero si tu base de datos es local y no de producción, se pueden ignorar.
+# Si estás trabajando en equipo, es MEJOR NO IGNORARLOS.
+# db.sqlite3
+
+# Archivos estáticos y de medios generados localmente
+/static_collected/
+/media/
+
+# Archivos de Log
+*.log
+!/logs/
+
+# Archivos de configuración y credenciales sensibles
+############
+# Archivo donde se guardan las credenciales de la base de datos, SECRET_KEY, etc.
+# ESTE ES EL MÁS IMPORTANTE PARA LA SEGURIDAD.
+settings_local.py
+local_settings.py
+.env # Si usas variables de entorno
+
+# Sistemas Operativos
+############
+.DS_Store # macOS
+Thumbs.db # Windows
+
+# Varios
+############
+*.bak
+*.swp
+*~

@@ -1,0 +1,226 @@
+.places-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.places-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.places-header .page-head {
+  padding: 0;
+}
+
+.places-meta-pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  background: linear-gradient(135deg, rgba(0,255,255,.12), rgba(0,180,255,.05));
+  border: 1px solid rgba(0,255,255,.35);
+  color: #b7f5ff;
+  backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.places-meta-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #29ffd1;
+  box-shadow: 0 0 8px rgba(41,255,209,.7);
+}
+
+.places-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.places-search {
+  position: relative;
+  flex: 1 1 260px;
+}
+
+.places-search input {
+  width: 100%;
+  padding: 10px 12px 10px 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(12,18,32,.9);
+  color: #f9fbff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.places-search input:focus {
+  border-color: rgba(0,255,255,.7);
+  box-shadow: 0 0 0 1px rgba(0,255,255,.25);
+  background: rgba(12,18,32,1);
+}
+
+.places-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  opacity: .6;
+}
+
+.places-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.place-card {
+  position: relative;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 0 0, rgba(0,255,255,.13), transparent 55%), rgba(10,14,26,.96);
+  border: 1px solid rgba(255,255,255,.04);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, border .18s ease, background .18s ease;
+  overflow: hidden;
+}
+
+.place-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(0,255,255,.35), transparent 40%, rgba(0,180,255,.25));
+  opacity: 0;
+  transition: opacity .18s ease;
+  pointer-events: none;
+}
+
+.place-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.55);
+  border-color: rgba(0,255,255,.25);
+  background: radial-gradient(circle at 0 0, rgba(0,255,255,.18), transparent 60%), rgba(8,12,24,.98);
+}
+
+.place-card:hover::before {
+  opacity: .55;
+}
+
+.place-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 0, #29ffd1, #00a0ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #020617;
+  flex-shrink: 0;
+}
+
+.place-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.place-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.place-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #f9fbff;
+}
+
+.place-badge-new {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(41,255,209,.12);
+  border: 1px solid rgba(41,255,209,.6);
+  color: #b9ffe9;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.place-address {
+  font-size: 0.87rem;
+  color: rgba(196,210,255,.9);
+}
+
+.place-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.place-tag-chip {
+  font-size: 0.72rem;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(15,23,42,.8);
+  border: 1px solid rgba(148,163,184,.3);
+  color: #dbeafe;
+}
+
+.place-foot {
+  font-size: 0.72rem;
+  color: rgba(148,163,184,.9);
+  margin-top: 6px;
+}
+
+.places-empty {
+  padding: 24px;
+  text-align: center;
+  color: rgba(148,163,184,.95);
+  font-size: 0.9rem;
+}
+
+.places-empty span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px dashed rgba(148,163,184,.5);
+}
+
+.places-no-results {
+  display: none;
+  padding: 12px 4px 0;
+  font-size: 0.85rem;
+  color: rgba(248,250,252,.86);
+  opacity: .8;
+}
+
+@media (max-width: 700px){
+  .place-card {
+    padding: 12px 14px;
+  }
+}

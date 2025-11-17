@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/places.css' %}">
+
+<div class="page-head">
+  <div class="h1">Mis lugares favoritos</div>
+  <div class="subtle">Atajos rápidos a los lugares que más te importan.</div>
+</div>
+
+{% if places %}
+  <div class="places-grid">
+    {% for p in places %}
+      <article class="place-card">
+        <h2 class="place-title">{{ p.name }}</h2>
+        {% if p.address %}
+          <p class="place-address">{{ p.address }}</p>
+        {% endif %}
+
+        <div style="margin-top:8px;">
+          <form method="post"
+                action="{% url 'toggle_favorite_place' p.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'favorites' %}">
+            <button type="submit"
+                    style="
+                      padding:4px 10px;
+                      border-radius:999px;
+                      font-size:0.78rem;
+                      border:1px solid rgba(248,113,113,.7);
+                      cursor:pointer;
+                      background:rgba(248,113,113,.12);
+                      color:#fed7d7;
+                    ">
+              Quitar de favoritos
+            </button>
+          </form>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card pad" style="margin-top:16px;">
+    <p class="subtle">
+      Todavía no tienes lugares favoritos. Ve a <a href="{% url 'places' %}">Lugares</a> y marca algunos con la estrella ☆.
+    </p>
+  </div>
+{% endif %}
+{% endblock %}

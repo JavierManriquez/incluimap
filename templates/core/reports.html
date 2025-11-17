@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load static stars %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/reports_new.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="reports-layout">
+  <div class="reports-header">
+    <div class="page-head">
+      <div class="h1">
+        {% if show_only_mine %}Mis reportes{% else %}Reportes recientes{% endif %}
+      </div>
+      <div class="subtle">
+        {% if show_only_mine %}
+          Tus contribuciones de accesibilidad en IncluiMap.
+        {% else %}
+          Fotos, calificaciones y etiquetas subidas por la comunidad.
+        {% endif %}
+      </div>
+    </div>
+
+    {% if reports %}
+      <div class="reports-meta-pill">
+        <span class="reports-meta-pill-dot"></span>
+        <span>
+          {% if show_only_mine %}
+            Has enviado {{ reports|length }} reportes de accesibilidad
+          {% else %}
+            {{ reports|length }} reportes de accesibilidad registrados
+          {% endif %}
+        </span>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if reports %}
+    <div class="reports-toolbar">
+      <div class="subtle reports-intro">
+        Explora cómo se ve la accesibilidad en tu comuna: rampas, baños, veredas y más.
+      </div>
+
+      <form method="get" class="reports-filters">
+        <div class="reports-filter-group">
+          <label class="subtle">Ordenar por</label>
+          <select name="orden" onchange="this.form.submit()">
+            <option value="newest" {% if order == 'newest' or not order %}selected{% endif %}>
+              Más recientes primero
+            </option>
+            <option value="oldest" {% if order == 'oldest' %}selected{% endif %}>
+              Más antiguos primero
+            </option>
+          </select>
+        </div>
+
+        <div class="reports-filter-group">
+          <label class="subtle">Desde</label>
+          <input type="date" name="desde" value="{{ date_from }}">
+        </div>
+
+        <div class="reports-filter-group">
+          <label class="subtle">Hasta</label>
+          <input type="date" name="hasta" value="{{ date_to }}">
+        </div>
+
+        <button type="submit" class="btn small">Filtrar</button>
+      </form>
+
+      <div class="reports-search">
+        <span class="reports-search-icon">🔍</span>
+        <input type="search"
+               placeholder="Buscar por lugar, calle, etiqueta o comentario…"
+               oninput="filterReports(this.value)">
+      </div>
+    </div>
+
+    <div class="reports-grid" id="reports-grid">
+      {% for r in reports %}
+        <article class="report-card"
+                 data-search="{{ r.place.name }} {{ r.place.address }} {{ r.tags }} {{ r.description }}">
+          <div class="report-media">
+            {% if r.photo %}
+              <img src="{{ r.photo.url }}" alt="Foto reporte {{ r.place.name }}">
+            {% else %}
+              <div class="report-media placeholder">
+                <span class="emoji">📍</span>
+                <span class="label">Sin foto</span>
+              </div>
+            {% endif %}
+
+            <div class="report-rating-pill">
+              <span class="star">★</span>
+              <span>{{ r.rating }}/5</span>
+            </div>
+          </div>
+
+          <div class="report-body">
+            <div class="report-top-row">
+              <div class="report-place">{{ r.place.name }}</div>
+              <div class="report-stars" aria-label="Calificación {{ r.rating }} de 5">
+                {% star_row r.rating %}
+              </div>
+            </div>
+
+            <div class="report-address">{{ r.place.address }}</div>
+
+            {% if r.tags %}
+              <div class="report-tags">
+                {% for t in r.tags|split_tags %}
+                  <span class="tag-chip">{{ t }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% if r.description %}
+              <p class="report-desc">{{ r.description }}</p>
+            {% endif %}
+
+            <div class="report-meta">
+              <div class="report-user">
+                {% if r.author.profile.avatar %}
+                  <img src="{{ r.author.profile.avatar.url }}"
+                       alt="Foto de {{ r.author.username }}"
+                       class="user-avatar user-avatar-photo">
+                {% else %}
+                  <div class="user-avatar user-avatar-fallback">
+                    {{ r.author.username|slice:":1"|upper }}
+                  </div>
+                {% endif %}
+                <span class="user-name">@{{ r.author.username }}</span>
+              </div>
+              <span class="dot">•</span>
+              <time datetime="{{ r.created_at|date:'c' }}">
+                {{ r.created_at|date:"d/m/Y H:i" }}
+              </time>
+            </div>
+
+            
+            <div class="report-footer"
+                 style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <div class="subtle" style="font-size:0.8rem;">
+                💬 {{ r.comments.count }} comentario{{ r.comments.count|pluralize:"s" }}
+              </div>
+              <a href="{% url 'report_detail' r.pk %}" class="report-btn report-btn-detail">
+                Ver detalles
+              </a>
+            </div>
+
+            {% if show_only_mine %}
+              <div class="report-actions">
+                <a href="{% url 'report_edit' r.pk %}"
+                   class="report-btn report-btn-edit">
+                  Editar
+                </a>
+
+                <form method="post"
+                      action="{% url 'report_delete' r.pk %}"
+                      onsubmit="return confirm('¿Seguro que quieres eliminar este reporte?');">
+                  {% csrf_token %}
+                  <button type="submit"
+                          class="report-btn report-btn-delete">
+                    Eliminar
+                  </button>
+                </form>
+              </div>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <div id="reports-no-results" class="reports-no-results">
+      No encontramos reportes que coincidan con tu búsqueda.
+    </div>
+
+  {% else %}
+    <div class="card pad reports-empty">
+      <span>🚧 Aún no hay reportes. Sube el primero desde el mapa y ayuda a visibilizar la accesibilidad.</span>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  function filterReports(term){
+    term = term.toLowerCase();
+    const cards = document.querySelectorAll('.report-card');
+    let anyVisible = false;
+
+    cards.forEach(card => {
+      const text = card.dataset.search.toLowerCase();
+      const show = text.includes(term);
+      card.style.display = show ? "" : "none";
+      if (show) anyVisible = true;
+    });
+
+    const msg = document.getElementById('reports-no-results');
+    if (msg){
+      msg.style.display = anyVisible ? "none" : "block";
+    }
+  }
+</script>
+
+{% endblock %}
+
+
+
+

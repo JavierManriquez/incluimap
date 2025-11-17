@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>IncluiMap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  {% load static %}{% load nav_active %}
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  {% block extra_css %}{% endblock %}
+
+  <style>
+    .logo-img {
+      height: 44px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .header .title {
+      display: none;
+    }
+
+    .header {
+      z-index: 99990 !important;
+    }
+
+    .map-actions {
+      z-index: 10 !important;
+    }
+
+    
+    .nav-dashboard-btn {
+      margin-left: 8px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,.7);
+      background: radial-gradient(circle at 0 0, rgba(59,130,246,.45), transparent 60%),
+                  linear-gradient(135deg, rgba(56,189,248,.35), rgba(37,99,235,.4));
+      color: #e0f7ff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.75);
+      backdrop-filter: blur(10px);
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .nav-dashboard-btn:hover {
+      background: radial-gradient(circle at 0 0, rgba(96,165,250,.7), transparent 65%),
+                  linear-gradient(135deg, rgba(56,189,248,.55), rgba(37,99,235,.8));
+      color: #ffffff;
+      transform: translateY(-1px);
+      border-color: rgba(129,230,217,1);
+      box-shadow: 0 10px 24px rgba(0,0,0,.9);
+    }
+
+    .nav-dashboard-btn span.icon {
+      font-size: 0.95rem;
+    }
+
+    .nav-dashboard-btn.active {
+      border-color: rgba(129,230,217,1);
+      box-shadow: 0 0 0 1px rgba(45,212,191,.5), 0 10px 24px rgba(0,0,0,.85);
+    }
+
+    
+    .nav-user-dropdown {
+      position: relative;
+      margin-left: 16px;
+      z-index: 99999;
+    }
+
+    .nav-user-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.45);
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,.35), transparent 60%),
+                  rgba(15,23,42,.95);
+      color: #b8e6ff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,.6);
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }
+
+    .nav-user-trigger:hover {
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,.5), transparent 65%),
+                  rgba(15,23,42,1);
+      border-color: rgba(59,130,246,.8);
+      color: #e0f4ff;
+      transform: translateY(-1px);
+    }
+
+    .nav-user-label {
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav-user-caret {
+      font-size: 0.7rem;
+      opacity: 0.85;
+    }
+
+    .nav-user-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      min-width: 220px;
+      padding: 16px 12px 18px 12px;
+      border-radius: 18px;
+      background: rgba(15,23,42,1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      max-height: calc(100vh - 90px);
+      overflow: visible;
+    }
+
+    .nav-user-menu::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      right: 32px;
+      width: 16px;
+      height: 16px;
+      background: rgba(15,23,42,1);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-left: 1px solid rgba(255,255,255,0.08);
+      transform: rotate(45deg);
+    }
+
+    .nav-user-dropdown:hover .nav-user-menu,
+    .nav-user-dropdown:focus-within .nav-user-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .nav-user-menu a,
+    .nav-user-menu button {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: transparent;
+      color: #e5f2ff;
+      font-size: 0.9rem;
+      text-align: left;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .nav-user-menu a:hover,
+    .nav-user-menu button:hover {
+      background: linear-gradient(135deg, rgba(56,189,248,.25), rgba(59,130,246,.1));
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .nav-user-menu .logout-item {
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(248,113,113,.95), rgba(239,68,68,.85));
+      color: #fff;
+      font-weight: 600;
+      margin-top: 4px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.75);
+    }
+
+    .nav-user-menu .logout-item:hover {
+      background: linear-gradient(135deg, rgba(252,165,165,1), rgba(248,113,113,1));
+      transform: translateY(-1px);
+    }
+
+    .nav-login-link {
+      color: #b8e6ff;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.4);
+      background: rgba(15,23,42,.9);
+      box-shadow: 0 3px 10px rgba(0,0,0,.55);
+      transition: all .18s ease;
+    }
+
+    .nav-login-link:hover {
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,.4), transparent 60%),
+                  rgba(15,23,42,1);
+      color: #ffffff;
+      border-color: rgba(59,130,246,.8);
+      transform: translateY(-1px);
+    }
+
+    #map,
+    .leaflet-container,
+    .leaflet-pane {
+      z-index: 0 !important;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="{% url 'home' %}" aria-label="Inicio">
+        <img src="{% static 'img/Logo IncluiMap.png' %}" alt="IncluiMap" class="logo-img">
+        <span class="title"></span>
+      </a>
+
+      <nav class="nav" aria-label="Pestañas">
+        <a class="tab {% active 'home' %}"    href="{% url 'home' %}">Mapa</a>
+        <a class="tab {% active 'places' %}"  href="{% url 'places' %}">Lugares</a>
+        <a class="tab {% active 'reports' %}" href="{% url 'reports' %}">Reportes</a>
+        <a class="tab {% active 'about' %}"   href="{% url 'about' %}">Acerca</a>
+        <a class="tab {% active 'contact' %}" href="{% url 'contact' %}">Contacto</a>
+
+        {# Botón profesional para el Dashboard de métricas #}
+        <a href="{% url 'dashboard' %}"
+           class="nav-dashboard-btn {% active 'dashboard' %}">
+          <span class="icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+
+        {% if user.is_authenticated %}
+          <div class="nav-user-dropdown">
+            <button type="button" class="nav-user-trigger">
+              <span class="nav-user-label">Hola, {{ user.username }}</span>
+              <span class="nav-user-caret">▾</span>
+            </button>
+
+            <div class="nav-user-menu">
+              <a href="{% url 'profile' %}">Mi perfil</a>
+              <a href="{% url 'my_reports' %}">Mis reportes</a>
+              <a href="{% url 'notifications' %}">Notificaciones</a>
+              <a href="{% url 'favorites' %}">Mis favoritos</a>
+
+              <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-item">Cerrar sesión</button>
+              </form>
+            </div>
+          </div>
+        {% else %}
+          <a href="{% url 'login' %}" class="nav-login-link">Iniciar sesión</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="inner">
+      <span>© {{ now|date:"Y" }} IncluiMap</span>
+    </div>
+  </footer>
+</body>
+</html>
+
+

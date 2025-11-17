@@ -1,0 +1,166 @@
+
+.map-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-bottom: 40px;
+}
+
+
+.map-page .page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.map-page .page-head .h1 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.map-page .page-head .subtle {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+
+.map-page .badge {
+  align-self: center;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(94, 234, 212, 0.6);
+  color: rgba(94, 234, 212, 0.95);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+
+.map-wrap {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+@media (max-width: 960px) {
+  .map-wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.map-filters {
+  border-radius: 18px;
+  padding: 18px 20px;
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(10, 15, 30, 0.98));
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.7);
+  position: sticky;
+  top: 100px;
+}
+
+
+@media (max-width: 900px) {
+  .map-filters {
+    position: relative;
+    top: 0;
+  }
+}
+
+
+.map-filters .input {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e2e8f0;
+  font-size: 0.93rem;
+}
+
+.map-filters .input:focus {
+  outline: none;
+  border-color: rgba(94, 234, 212, 0.8);
+  box-shadow: 0 0 0 1px rgba(94, 234, 212, 0.6);
+}
+
+
+.map-filters .filters-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.map-filters .filters-tags-row label {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.85);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.map-filters .filters-tags-row label:hover {
+  background: rgba(15, 23, 42, 1);
+  border-color: rgba(94, 234, 212, 0.6);
+}
+
+
+.map-filters .filters-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.map-filters .filters-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+
+.map-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.8);
+}
+
+
+#map {
+  width: 100%;
+  height: 70vh; 
+  min-height: 500px;
+  border-radius: 18px;
+}
+
+
+.map-actions {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 500;
+  display: flex;
+  gap: 8px;
+}
+
+.map-actions .btn {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #00e0ff, #0099ff);
+  color: #0f172a;
+  font-weight: 600;
+  box-shadow: 0 8px 22px rgba(0, 255, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.map-actions .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(0, 255, 255, 0.4);
+}
+

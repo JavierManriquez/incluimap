@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/report_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="h1">Detalle del reporte</div>
+    <div class="subtle">
+      Revisa el reporte y comenta tu experiencia sobre la accesibilidad de este lugar.
+    </div>
+  </div>
+</div>
+
+<div class="report-detail-layout">
+  
+  <section class="card pad report-main-card">
+    <header class="report-main-header">
+      <div>
+        <h2 class="h2 report-place-title">
+          {% if report.place %}
+            {{ report.place.name }}
+          {% else %}
+            {{ report.title|default:"Reporte de accesibilidad" }}
+          {% endif %}
+        </h2>
+
+        {% if report.place and report.place.address %}
+          <div class="report-place-address">
+            📍 {{ report.place.address }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="report-rating-chip" aria-label="Calificación {{ report.rating }} de 5">
+        <span class="rating-number">{{ report.rating }}/5</span>
+        <span class="rating-stars">
+          {% for i in "12345" %}
+            {% if forloop.counter <= report.rating %}
+              ★
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </span>
+      </div>
+    </header>
+
+    {% if report.photo %}
+      <div class="report-photo-wrap">
+        <div class="report-photo-glow"></div>
+        <img src="{{ report.photo.url }}"
+             alt="Foto del reporte"
+             class="report-photo">
+      </div>
+    {% endif %}
+
+    {% if report.description %}
+      <p class="report-description">
+        {{ report.description }}
+      </p>
+    {% endif %}
+
+    <footer class="report-meta-strip">
+      <div class="report-meta-user">
+        {% if report.author.profile.avatar %}
+          <img src="{{ report.author.profile.avatar.url }}"
+               alt="Foto de {{ report.author.username }}"
+               class="user-avatar user-avatar-photo">
+        {% else %}
+          <div class="user-avatar user-avatar-fallback">
+            {{ report.author.username|slice:":1"|upper }}
+          </div>
+        {% endif %}
+        <div class="report-meta-user-text">
+          <span class="user-handle">@{{ report.author.username }}</span>
+          <span class="report-meta-date">
+            Reportado el {{ report.created_at|date:"d/m/Y H:i" }}
+          </span>
+        </div>
+      </div>
+
+      <div class="report-meta-badge">
+        Reporte de accesibilidad
+      </div>
+    </footer>
+  </section>
+
+  
+  <aside class="card pad report-side-card">
+    <header class="report-side-header">
+      <h3 class="h2">Comentarios de la comunidad</h3>
+      <p class="subtle">
+        Aquí puedes complementar la información del reporte o contar tu experiencia
+        en este lugar. Los comentarios se mostrarán en tiempo real.
+      </p>
+    </header>
+
+    
+    <div class="comments-list">
+      {% if comments %}
+        {% for comment in comments %}
+          <article class="comment-item">
+            <div class="comment-header">
+              <div class="comment-user">
+                {% if comment.author.profile.avatar %}
+                  <img src="{{ comment.author.profile.avatar.url }}"
+                       alt="Foto de {{ comment.author.username }}"
+                       class="user-avatar user-avatar-photo">
+                {% else %}
+                  <div class="user-avatar user-avatar-fallback">
+                    {{ comment.author.username|slice:":1"|upper }}
+                  </div>
+                {% endif %}
+                <div class="comment-user-meta">
+                  <span class="user-handle">@{{ comment.author.username }}</span>
+                  <span class="comment-date">
+                    {{ comment.created_at|date:"d/m/Y H:i" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="comment-body">
+              {{ comment.text|linebreaksbr }}
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        <div class="comments-empty">
+          <span class="emoji">💬</span>
+          <p>Aún no hay comentarios en este reporte. Sé la primera persona en aportar información 👀</p>
+        </div>
+      {% endif %}
+    </div>
+
+    
+    <div class="comment-form-wrap">
+      {% if user.is_authenticated %}
+        <form method="post" class="comment-form">
+          {% csrf_token %}
+          <label for="id_text" class="comment-label">
+            Escribe tu comentario
+          </label>
+          <textarea id="id_text"
+                    name="text"
+                    rows="3"
+                    maxlength="1000"
+                    class="comment-textarea"
+                    placeholder="Ej: El ascensor funciona pero la rampa de acceso todavía es complicada."></textarea>
+
+          <div class="comment-form-footer">
+            <span class="comment-hint">
+              Sé respetuoso: tu comentario ayuda a otras personas a moverse por la ciudad 🙌
+            </span>
+            <button type="submit" class="btn">
+              Publicar comentario
+            </button>
+          </div>
+        </form>
+      {% else %}
+        <div class="comment-login-hint subtle">
+          Debes <a href="{% url 'login' %}">iniciar sesión</a> para comentar este reporte.
+        </div>
+      {% endif %}
+    </div>
+  </aside>
+</div>
+
+<div class="report-detail-actions">
+  <a href="{% url 'reports' %}" class="btn btn-ghost">
+    ← Volver a todos los reportes
+  </a>
+</div>
+{% endblock %}
+

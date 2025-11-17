@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+  .about-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 60px 20px;
+    color: #dceeff;
+    background: radial-gradient(circle at top, #06212e, #010b13);
+    border-radius: 16px;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.08);
+    animation: fadeIn 1s ease-in-out;
+  }
+
+ 
+  .about-section h1 {
+    font-size: 2.7rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #00ffff, #00b8ff, #00ffff);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    display: inline-block; 
+    animation: moveGradient 3s linear infinite;
+  }
+
+  
+  .about-section p {
+    max-width: 800px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: #b4d8e7;
+    line-height: 1.6;
+  }
+
+  
+  .about-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .info-card {
+    background: rgba(0, 60, 90, 0.25);
+    border: 1px solid rgba(0, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    width: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(8px);
+  }
+
+  .info-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 18px rgba(0, 255, 255, 0.25);
+  }
+
+  .info-card h3 {
+    color: #00e5ff;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+
+ 
+  .tech-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tech-list li {
+    margin: 6px 0;
+  }
+
+ 
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes moveGradient {
+    to {
+      background-position: 200% center;
+    }
+  }
+</style>
+
+
+<div class="about-section">
+  <h1>Acerca de IncluiMap</h1>
+  <p>
+    <strong>IncluiMap</strong> es una plataforma colaborativa que promueve la <strong>accesibilidad urbana</strong>,
+    permitiendo a los ciudadanos reportar, visualizar y mejorar el acceso en los espacios públicos.
+  </p>
+  <p>
+    Nuestro propósito es construir ciudades más inclusivas, donde la información sea compartida por todos y
+    contribuya a la movilidad y bienestar colectivo.
+  </p>
+
+  <div class="about-cards">
+    <div class="info-card">
+      <h3>🎯 Misión</h3>
+      <p>
+        Facilitar información confiable sobre accesibilidad urbana, impulsando una comunidad participativa y consciente.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3>💡 Visión</h3>
+      <p>
+        Ser la plataforma líder en accesibilidad urbana en Maipù, integrando tecnología, inclusión y colaboración ciudadana.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3>⚙️ Tecnologías</h3>
+      <ul class="tech-list">
+        <li>Django</li>
+        <li>MySQL</li>
+        <li>Leaflet</li>
+        <li>OpenStreetMap</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
