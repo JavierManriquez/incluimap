@@ -18,6 +18,7 @@
   {% block extra_css %}{% endblock %}
 
   <style>
+
     .logo-img {
       height: 44px;
       width: auto;
@@ -42,28 +43,26 @@
       margin-left: 8px;
       padding: 7px 16px;
       border-radius: 999px;
-      border: 1px solid rgba(56,189,248,.7);
-      background: radial-gradient(circle at 0 0, rgba(59,130,246,.45), transparent 60%),
-                  linear-gradient(135deg, rgba(56,189,248,.35), rgba(37,99,235,.4));
-      color: #e0f7ff;
-      font-weight: 600;
+      border: 1px solid rgba(56,189,248,1);
+      background: linear-gradient(135deg, rgba(37,99,235,.85), rgba(56,189,248,.95));
+      color: #ffffff;
+      font-weight: 700;
       font-size: 0.9rem;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.75);
+      box-shadow: 0 6px 18px rgba(0,0,0,.85);
       backdrop-filter: blur(10px);
       transition: all 0.18s ease;
       white-space: nowrap;
     }
 
     .nav-dashboard-btn:hover {
-      background: radial-gradient(circle at 0 0, rgba(96,165,250,.7), transparent 65%),
-                  linear-gradient(135deg, rgba(56,189,248,.55), rgba(37,99,235,.8));
+      background: linear-gradient(135deg, rgba(96,165,250,1), rgba(56,189,248,1));
       color: #ffffff;
-      transform: translateY(-1px);
-      border-color: rgba(129,230,217,1);
+      transform: translateY(-2px);
+      border-color: #ffffff;
       box-shadow: 0 10px 24px rgba(0,0,0,.9);
     }
 
@@ -72,8 +71,32 @@
     }
 
     .nav-dashboard-btn.active {
-      border-color: rgba(129,230,217,1);
-      box-shadow: 0 0 0 1px rgba(45,212,191,.5), 0 10px 24px rgba(0,0,0,.85);
+      border-color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(56,189,248,.7), 0 10px 24px rgba(0,0,0,.9);
+    }
+
+   
+    .nav-contrast-btn {
+      margin-left: 12px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 2px solid #ffffff;
+      background: rgba(255,255,255,0.16);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 18px rgba(0,0,0,.55);
+      white-space: nowrap;
+    }
+
+    .nav-contrast-btn:hover {
+      background: rgba(255,255,255,0.35);
+      color: #000000;
+      border-color: #ffffff;
+      transform: translateY(-1px);
     }
 
     
@@ -89,23 +112,21 @@
       gap: 6px;
       padding: 8px 16px;
       border-radius: 999px;
-      border: 1px solid rgba(148,163,184,.45);
-      background: radial-gradient(circle at 0 0, rgba(56,189,248,.35), transparent 60%),
-                  rgba(15,23,42,.95);
-      color: #b8e6ff;
+      border: 1px solid rgba(248,250,252,.7);
+      background: rgba(15,23,42,.98);
+      color: #ffffff;
       font-weight: 600;
       font-size: 0.9rem;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,.6);
+      box-shadow: 0 4px 14px rgba(0,0,0,.7);
       backdrop-filter: blur(8px);
       transition: all 0.2s ease;
     }
 
     .nav-user-trigger:hover {
-      background: radial-gradient(circle at 0 0, rgba(56,189,248,.5), transparent 65%),
-                  rgba(15,23,42,1);
-      border-color: rgba(59,130,246,.8);
-      color: #e0f4ff;
+      background: rgba(15,23,42,1);
+      border-color: rgba(59,130,246,1);
+      color: #ffffff;
       transform: translateY(-1px);
     }
 
@@ -128,10 +149,10 @@
       min-width: 220px;
       padding: 16px 12px 18px 12px;
       border-radius: 18px;
-      background: rgba(15,23,42,1);
+      background: #05070a;
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 18px 50px rgba(0,0,0,0.9);
+      border: 1px solid rgba(248,250,252,0.7);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.95);
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -150,9 +171,9 @@
       right: 32px;
       width: 16px;
       height: 16px;
-      background: rgba(15,23,42,1);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      border-left: 1px solid rgba(255,255,255,0.08);
+      background: #05070a;
+      border-top: 1px solid rgba(248,250,252,0.7);
+      border-left: 1px solid rgba(248,250,252,0.7);
       transform: rotate(45deg);
     }
 
@@ -183,18 +204,18 @@
 
     .nav-user-menu a:hover,
     .nav-user-menu button:hover {
-      background: linear-gradient(135deg, rgba(56,189,248,.25), rgba(59,130,246,.1));
+      background: linear-gradient(135deg, rgba(56,189,248,.35), rgba(59,130,246,.2));
       color: #fff;
       transform: translateY(-1px);
     }
 
     .nav-user-menu .logout-item {
       justify-content: center;
-      background: linear-gradient(135deg, rgba(248,113,113,.95), rgba(239,68,68,.85));
+      background: linear-gradient(135deg, rgba(248,113,113,.98), rgba(239,68,68,.95));
       color: #fff;
       font-weight: 600;
       margin-top: 4px;
-      box-shadow: 0 4px 14px rgba(0,0,0,.75);
+      box-shadow: 0 4px 14px rgba(0,0,0,.85);
     }
 
     .nav-user-menu .logout-item:hover {
@@ -203,22 +224,22 @@
     }
 
     .nav-login-link {
-      color: #b8e6ff;
+      color: #e5f2ff;
       font-weight: 600;
       text-decoration: none;
       padding: 6px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(148,163,184,.4);
-      background: rgba(15,23,42,.9);
-      box-shadow: 0 3px 10px rgba(0,0,0,.55);
+      border: 1px solid rgba(248,250,252,.7);
+      background: rgba(15,23,42,.95);
+      box-shadow: 0 3px 10px rgba(0,0,0,.7);
       transition: all .18s ease;
     }
 
     .nav-login-link:hover {
-      background: radial-gradient(circle at 0 0, rgba(56,189,248,.4), transparent 60%),
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,.55), transparent 60%),
                   rgba(15,23,42,1);
       color: #ffffff;
-      border-color: rgba(59,130,246,.8);
+      border-color: rgba(59,130,246,1);
       transform: translateY(-1px);
     }
 
@@ -226,6 +247,106 @@
     .leaflet-container,
     .leaflet-pane {
       z-index: 0 !important;
+    }
+
+ 
+
+    .flash-messages {
+      margin-bottom: 1.5rem;
+    }
+
+    .flash-message {
+      border-radius: 16px;
+      padding: 10px 16px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .flash-success {
+      background: rgba(16,185,129,.25);
+      border: 1px solid #00ffbf;
+      color: #baffea;
+    }
+
+    .flash-error {
+      background: rgba(248,113,113,.25);
+      border: 1px solid #ff6b6b;
+      color: #ffd4d4;
+    }
+
+    .flash-info {
+      background: rgba(59,130,246,.25);
+      border: 1px solid #5fa8ff;
+      color: #d5e8ff;
+    }
+
+ 
+
+    body.high-contrast {
+      background-color: #000000 !important;
+      color: #ffffff !important;
+    }
+
+    body.high-contrast .header,
+    body.high-contrast .footer,
+    body.high-contrast .container,
+    body.high-contrast nav {
+      background-color: #000000 !important;
+      border-color: #ffffff !important;
+    }
+
+    body.high-contrast h1,
+    body.high-contrast h2,
+    body.high-contrast h3,
+    body.high-contrast p,
+    body.high-contrast span,
+    body.high-contrast a,
+    body.high-contrast label,
+    body.high-contrast li {
+      color: #ffffff !important;
+    }
+
+    body.high-contrast .card,
+    body.high-contrast .panel,
+    body.high-contrast .filter-box {
+      background-color: #0a0a0a !important;
+      border: 1px solid #ffffff !important;
+    }
+
+    body.high-contrast .flash-success,
+    body.high-contrast .flash-error,
+    body.high-contrast .flash-info {
+      background-color: #111111 !important;
+      border-color: #ffffff !important;
+      color: #ffffff !important;
+    }
+
+    body.high-contrast .tab {
+      color: #ffffff !important;
+      background-color: #000000 !important;
+      border-radius: 999px;
+      border: 1px solid #ffffff !important;
+    }
+
+    body.high-contrast button,
+    body.high-contrast .btn,
+    body.high-contrast .nav-dashboard-btn,
+    body.high-contrast .nav-login-link,
+    body.high-contrast .nav-user-trigger {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      border-color: #000000 !important;
+      box-shadow: none !important;
+    }
+
+    /* Controles del mapa más visibles */
+    body.high-contrast .leaflet-control,
+    body.high-contrast .leaflet-bar a {
+      filter: invert(100%) hue-rotate(180deg) contrast(1.4);
+    }
+
+    body.high-contrast .leaflet-marker-icon {
+      filter: drop-shadow(0 0 8px #ffffff);
     }
   </style>
 </head>
@@ -245,12 +366,15 @@
         <a class="tab {% active 'about' %}"   href="{% url 'about' %}">Acerca</a>
         <a class="tab {% active 'contact' %}" href="{% url 'contact' %}">Contacto</a>
 
-        {# Botón profesional para el Dashboard de métricas #}
         <a href="{% url 'dashboard' %}"
            class="nav-dashboard-btn {% active 'dashboard' %}">
           <span class="icon">📊</span>
           <span>Dashboard</span>
         </a>
+
+        <button id="contrast-toggle" class="nav-contrast-btn" type="button">
+          🌓 Contraste
+        </button>
 
         {% if user.is_authenticated %}
           <div class="nav-user-dropdown">
@@ -279,6 +403,23 @@
   </header>
 
   <main class="container">
+
+    {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+          {% if not hide_activity_messages or 'report' not in message.tags and 'comment' not in message.tags %}
+            {% if 'success' in message.tags %}
+              <div class="flash-message flash-success">{{ message }}</div>
+            {% elif 'error' in message.tags %}
+              <div class="flash-message flash-error">{{ message }}</div>
+            {% else %}
+              <div class="flash-message flash-info">{{ message }}</div>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
     {% block content %}{% endblock %}
   </main>
 
@@ -287,7 +428,31 @@
       <span>© {{ now|date:"Y" }} IncluiMap</span>
     </div>
   </footer>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const toggleBtn = document.getElementById("contrast-toggle");
+      const body = document.body;
+
+      if (!toggleBtn) return;
+
+      if (localStorage.getItem("incluimap-contrast") === "on") {
+          body.classList.add("high-contrast");
+      }
+
+      toggleBtn.addEventListener("click", () => {
+          body.classList.toggle("high-contrast");
+
+          if (body.classList.contains("high-contrast")) {
+              localStorage.setItem("incluimap-contrast", "on");
+          } else {
+              localStorage.removeItem("incluimap-contrast");
+          }
+      });
+  });
+  </script>
 </body>
 </html>
+
 
 

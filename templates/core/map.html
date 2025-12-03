@@ -72,9 +72,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+  
   const MAIPU_BOUNDS = L.latLngBounds(
-    L.latLng(-33.585, -70.835),
-    L.latLng(-33.480, -70.700)
+    L.latLng(-33.598, -70.875),
+    L.latLng(-33.434, -70.686)
   );
 
   const map = L.map('map', {
@@ -148,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('tag-rampa').checked) t.push('rampa');
     if (document.getElementById('tag-ascensor').checked) t.push('ascensor');
     if (document.getElementById('tag-bano').checked) t.push('bano');
-    if (document.getElementById('tag-est').checked) t.push('estacionamiento');
+    if (document.getElementById('tag-est').checked) t.push('estac_pmr');
     return t.join(',');
   }
 
@@ -165,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const resp = await fetch(`/api/places/?${qs.join('&')}`, {
         headers: { 'Accept': 'application/json' }
       });
+
       if (!resp.ok){
         setStatus(`Error ${resp.status}`);
         showEmpty(true);
@@ -185,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const avg = (p.avg_rating != null) ? Number(p.avg_rating).toFixed(1) : '–';
         const count = p.reports_count || 0;
 
-        const reportHref = (p.id != null && p.id !== '') ? `/reportar/?place=${encodeURIComponent(p.id)}` : `/reportar/`;
+        const reportHref = `/reportar/?place=${encodeURIComponent(p.id)}`;
         const reportLink = `
           <div style="margin-top:8px">
             <a href="${reportHref}" class="btn btn-ghost" style="display:inline-flex">Reportar este lugar</a>
@@ -228,14 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   elQ.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); loadPlaces(); }});
-  const debounce = (fn, ms=350) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+  const debounce = (fn, ms=350) => { let t; return (...a) => {
+    clearTimeout(t); t = setTimeout(() => fn(...a), ms);
+  }; };
+
   elQ.addEventListener('input', debounce(loadPlaces, 400));
+
   ['tag-rampa','tag-ascensor','tag-bano','tag-est']
     .forEach(id => document.getElementById(id).addEventListener('change', loadPlaces));
 
+  window.addEventListener('resize', () => map.invalidateSize());
+  document.addEventListener('scroll', () => map.invalidateSize());
+
   loadPlaces();
 });
-window.addEventListener('resize', () => map.invalidateSize());
-document.addEventListener('scroll', () => map.invalidateSize());
 </script>
+
 {% endblock %}
+

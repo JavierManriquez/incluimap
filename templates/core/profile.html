@@ -17,7 +17,7 @@
     <div class="profile-card">
       <h2 class="h2 mb-2">Tu cuenta</h2>
       <p class="subtle mb-4">
-        Hola, {{ request.user.first_name|default:request.user.username }} 👋
+        Hola, {{ request.user.first_name|default:request.user.username }} 
       </p>
 
       <div class="profile-user-row">
@@ -78,13 +78,37 @@
           {{ p_form.bio }}
         </div>
 
-        <div>
+        {# === CAMBIO IMPORTANTE AQUÍ === #}
+        <div class="profile-photo-field">
           <label class="label">Foto de perfil</label>
-          {{ p_form.avatar }}
+
+          <div class="profile-avatar-preview mb-2">
+            {% if request.user.profile.avatar %}
+              <img src="{{ request.user.profile.avatar.url }}" alt="Foto actual" class="avatar-preview-img">
+            {% else %}
+              <div class="avatar-preview-placeholder">
+                {{ request.user.username|first|upper }}
+              </div>
+            {% endif %}
+          </div>
+
+          
+          <label for="id_avatar" class="btn btn-secondary btn-sm">
+            Cambiar foto
+          </label>
+          <input
+            type="file"
+            name="avatar"
+            id="id_avatar"
+            accept="image/jpeg,image/png,image/webp"
+            style="display: none;"
+          >
+
           <p class="subtle mt-1 text-xs">
-            Usa una imagen cuadrada (JPG/PNG/WEBP) para que se vea mejor.
+            Sube una imagen cuadrada (JPG, PNG o WEBP) para que se vea mejor.
           </p>
         </div>
+        {# === FIN CAMBIO === #}
 
         <div class="profile-actions">
           <button type="submit" class="btn btn-primary">
@@ -96,7 +120,6 @@
   </div>
 </div>
 {% endblock %}
-
 
 
 

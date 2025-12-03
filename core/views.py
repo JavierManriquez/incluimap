@@ -86,7 +86,6 @@ def my_reports_view(request):
         .select_related("place", "author")
     )
 
-    
     order = (request.GET.get("orden") or "newest").strip()
     if order == "oldest":
         qs = qs.order_by(DATE_FIELD)
@@ -94,7 +93,6 @@ def my_reports_view(request):
         order = "newest"
         qs = qs.order_by(f"-{DATE_FIELD}")
 
-    
     date_from = (request.GET.get("desde") or "").strip()
     date_to = (request.GET.get("hasta") or "").strip()
 
@@ -137,9 +135,14 @@ def report_view(request):
             report = form.save(commit=False)
             report.author = request.user
             report.save()
-            messages.success(request, "¡Reporte enviado! Gracias por colaborar.")
+            #  Etiquetamos este mensaje como "report"
+            messages.success(
+                request,
+                "¡Reporte enviado! Gracias por colaborar.",
+                extra_tags="report",
+            )
             return redirect("home")
-        messages.error(request, "Revisa los campos marcados.")
+        messages.error(request, "Revisa los campos marcados.", extra_tags="report")
     else:
         form = ReportForm(initial=initial)
 
@@ -158,9 +161,13 @@ def report_edit_view(request, pk):
         form = ReportForm(request.POST, request.FILES, instance=report)
         if form.is_valid():
             form.save()
-            messages.success(request, "Reporte actualizado correctamente.")
+            messages.success(
+                request,
+                "Reporte actualizado correctamente.",
+                extra_tags="report",
+            )
             return redirect("my_reports")
-        messages.error(request, "Revisa los campos marcados.")
+        messages.error(request, "Revisa los campos marcados.", extra_tags="report")
     else:
         form = ReportForm(instance=report)
 
@@ -181,7 +188,11 @@ def report_delete_view(request, pk):
 
     if request.method == "POST":
         report.delete()
-        messages.success(request, "Reporte eliminado correctamente.")
+        messages.success(
+            request,
+            "Reporte eliminado correctamente.",
+            extra_tags="report",
+        )
         return redirect("my_reports")
 
     return render(request, "core/report_confirm_delete.html", {
@@ -363,7 +374,10 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "¡Cuenta creada! Bienvenido/a a IncluiMap.")
+            messages.success(
+                request,
+                "¡Cuenta creada! Bienvenido/a a IncluiMap.",
+            )
             return redirect('home')
         messages.error(request, "Revisa los campos marcados.")
     else:
@@ -386,9 +400,14 @@ def profile_view(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, "Perfil actualizado correctamente.")
+            
+            messages.success(
+                request,
+                "Perfil actualizado correctamente.",
+                extra_tags="profile",
+            )
             return redirect('profile')
-        messages.error(request, "Revisa los campos marcados.")
+        messages.error(request, "Revisa los campos marcados.", extra_tags="profile")
     else:
         u_form = UserForm(instance=request.user)
         p_form = ProfileForm(instance=profile)
@@ -396,6 +415,8 @@ def profile_view(request):
     return render(request, "core/profile.html", {
         "u_form": u_form,
         "p_form": p_form,
+        
+        "hide_activity_messages": True,
     })
 
 
@@ -466,19 +487,31 @@ def report_detail(request, pk):
 
     if request.method == 'POST':
         if not request.user.is_authenticated:
-            messages.error(request, "Debes iniciar sesión para comentar.")
+            messages.error(
+                request,
+                "Debes iniciar sesión para comentar.",
+                extra_tags="comment",
+            )
             return redirect('login')
 
         text = request.POST.get('text', '').strip()
         if not text:
-            messages.error(request, "El comentario no puede estar vacío.")
+            messages.error(
+                request,
+                "El comentario no puede estar vacío.",
+                extra_tags="comment",
+            )
         else:
             Comment.objects.create(
                 report=report,
                 author=request.user,
                 text=text
             )
-            messages.success(request, "Comentario publicado.")
+            messages.success(
+                request,
+                "Comentario publicado.",
+                extra_tags="comment",
+            )
             return redirect('report_detail', pk=report.pk)
 
     comments = report.comments.select_related('author')
@@ -487,6 +520,4 @@ def report_detail(request, pk):
         'report': report,
         'comments': comments,
     })
-
-
 

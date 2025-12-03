@@ -62,8 +62,8 @@ class Place(models.Model):
 
     def clean(self):
         """
-        Valida que las coordenadas estén dentro del cuadrante de Maipú
-        (los mismos límites que usas en el mapa con Leaflet).
+        Valida que las coordenadas estén dentro del cuadrante de Maipú.
+        Se amplió el rango para cubrir de forma más realista la comuna completa.
         """
         super().clean()
 
@@ -73,27 +73,32 @@ class Place(models.Model):
         lat = float(self.lat)
         lng = float(self.lng)
 
-        MIN_LAT = -33.585
-        MAX_LAT = -33.480
-        MIN_LNG = -70.835
-        MAX_LNG = -70.700
+        
+        MIN_LAT = -33.598
+        MAX_LAT = -33.434
+        MIN_LNG = -70.875
+        MAX_LNG = -70.686
 
-        if not (MIN_LAT <= lat <= MAX_LAT and MIN_LNG <= lng <= MAX_LNG):
-            raise ValidationError({
-                'lat': (
-                    "Las coordenadas deben estar dentro de la comuna de Maipú "
-                    f"(lat entre {MIN_LAT} y {MAX_LAT}, lng entre {MIN_LNG} y {MAX_LNG})."
-                ),
-                'lng': (
-                    "Las coordenadas deben estar dentro de la comuna de Maipú "
-                    f"(lat entre {MIN_LAT} y {MAX_LAT}, lng entre {MIN_LNG} y {MAX_LNG})."
-                ),
-            })
+        errores = {}
+
+        if not (MIN_LAT <= lat <= MAX_LAT):
+            errores['lat'] = (
+                "La latitud debe estar dentro de la comuna de Maipú "
+                f"(entre {MIN_LAT} y {MAX_LAT})."
+            )
+
+        if not (MIN_LNG <= lng <= MAX_LNG):
+            errores['lng'] = (
+                "La longitud debe estar dentro de la comuna de Maipú "
+                f"(entre {MIN_LNG} y {MAX_LNG})."
+            )
+
+        if errores:
+            raise ValidationError(errores)
 
     def save(self, *args, **kwargs):
         """
-        Asegura que siempre se ejecute la validación (clean) antes de guardar,
-        incluso si se guarda desde código sin pasar por un formulario.
+        Asegura que siempre se ejecute la validación (clean) antes de guardar.
         """
         self.full_clean()
         return super().save(*args, **kwargs)
@@ -157,7 +162,7 @@ def create_favorite_place_notifications(sender, instance, created, **kwargs):
     place = instance.place
     author = instance.author
 
-    # Perfiles que tienen este lugar como favorito
+    
     favorites_qs = (
         Profile.objects
         .filter(favorite_places=place)
@@ -174,7 +179,7 @@ def create_favorite_place_notifications(sender, instance, created, **kwargs):
         if instance.description:
             msg += f"\n\nDescripción: {instance.description[:200]}"
 
-        # Crear la notificación en la BD
+        
         Notification.objects.create(
             user=user,
             place=place,
@@ -182,7 +187,7 @@ def create_favorite_place_notifications(sender, instance, created, **kwargs):
             message=msg,
         )
 
-        # Enviar correo si el usuario tiene email configurado
+        
         if user.email:
             try:
                 send_mail(
@@ -193,8 +198,6 @@ def create_favorite_place_notifications(sender, instance, created, **kwargs):
                     fail_silently=True,
                 )
             except Exception:
-                # Para el proyecto de título, registraría en logs;
-                # aquí simplemente lo ignoramos.
                 pass
 
 
